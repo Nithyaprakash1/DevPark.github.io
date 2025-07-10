@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPark - Build for Everyone: Ideas, Collaboration, & Community</title>
+    <!-- Tailwind CSS CDN for modern, utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a clean, professional, and accessible typeface -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font globally for consistent typography */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased; /* Smoother font rendering on macOS/iOS */
+            -moz-osx-smoothing: grayscale; /* Smoother font rendering on Firefox */
+        }
+        /* Enable smooth scrolling behavior for internal anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Custom underline effect for navigation links, consistent with Google's clean design */
+        .nav-link:hover {
+            text-decoration: underline;
+            text-decoration-color: #1a73e8; /* Google Blue for emphasis */
+            text-underline-offset: 4px; /* Space between text and underline */
+        }
+        /* Adjust scroll position to account for fixed header, preventing content from being hidden */
+        section {
+            padding-top: 80px; /* Space equal to header height */
+            margin-top: -80px; /* Negative margin to make the scroll target accurate */
+        }
+        /* Specific override for the home section, as it typically starts at the very top of the page */
+        #home {
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        /* Reusable styles for section titles and paragraphs to maintain consistency */
+        .section-title {
+            @apply text-3xl md:text-4xl font-bold text-gray-800 mb-6;
+        }
+        .section-paragraph {
+            @apply text-base md:text-lg text-gray-600 mb-4;
+        }
+
+        /* Slider specific styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%; /* Ensure slides take full width */
+            height: auto; /* Allow height to adjust */
+        }
+
+        .slide {
+            min-width: 100%; /* Each slide takes up 100% of the container width */
+            box-sizing: border-box;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            display: block; /* Remove extra space below image */
+            object-fit: cover; /* Ensure images cover the area without distortion */
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            display: flex; /* Use flex to center SVG icon */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-button:hover {
+            opacity: 1;
+        }
+
+        .prev-button {
+            left: 1rem;
+        }
+
+        .next-button {
+            right: 1rem;
+        }
+
+        .pagination-dots {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .dot.active {
+            background-color: #1a73e8; /* Google Blue */
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="text-gray-900 bg-gray-50">
+    <!-- Sticky Header: Ensures navigation is always accessible at the top -->
+    <header class="fixed top-0 left-0 w-full bg-white shadow-sm z-50">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <!-- Logo/Site Title: Links back to the home section -->
+            <a href="#home" class="flex items-center space-x-2">
+                <!-- Placeholder image for DevPark logo, rounded for a modern look -->
+                <img src="https://placehold.co/40x40/424242/ffffff?text=DP" alt="DevPark Logo" class="rounded-full">
+                <!-- Site title with bold styling -->
+                <span class="text-2xl font-bold text-gray-800">DevPark</span>
+            </a>
+
+            <!-- Desktop Navigation: Visible on medium screens and larger -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                <a href="#features" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Features</a>
+                <a href="#blog-news" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Blog/News</a>
+                <a href="#careers" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Careers</a>
+                <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                <a href="#privacy-policy" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Privacy</a>
+                <a href="#terms" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Terms</a>
+            </div>
+
+            <!-- Mobile Navigation (Hamburger Icon): Visible only on small screens -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-2">
+                    <!-- Hamburger icon using SVG for crisp display -->
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu: Toggles visibility via JavaScript -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-2 shadow-lg">
+            <a href="#home" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Home</a>
+            <a href="#features" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Features</a>
+            <a href="#blog-news" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Blog/News</a>
+            <a href="#help-center" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Help Center</a>
+            <a href="#contact" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Contact</a>
+            <a href="#privacy-policy" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Privacy Policy</a>
+            <a href="#terms" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 nav-link">Terms of Service</a>
+        </div>
+    </header>
+
+    <main class="pt-20"> <!-- Main content area, offset by header height -->
+
+        <!-- Home Section: Hero section with main call to action and app motto -->
+        <section id="home" class="min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 py-16 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-800 leading-tight mb-6">
+                    <span class="block text-blue-600">DevPark:</span> Build for Everyone.
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    A collaborative hub where <span class="font-semibold text-blue-700">developers, investors, and innovators</span> come together to share ideas, build projects, and launch the future.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#features" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                        Discover DevPark
+                    </a>
+                    <a href="#" class="bg-white hover:bg-gray-100 text-blue-600 border border-blue-600 font-semibold py-3 px-8 rounded-full shadow-md transition duration-300 transform hover:scale-105">
+                        Join the Community
+                    </a>
+                </div>
+
+                <!-- Auto Image Slider for Platform Overview -->
+                <div class="slider-container mt-16 max-w-full lg:max-w-4xl mx-auto">
+                    <div class="slides" id="platform-slider">
+                        <!-- Slide 1: General Platform Overview -->
+                        <div class="slide">
+                            <img src="https://placehold.co/800x450/edf2f7/4299e1?text=DevPark+Interface+Overview" alt="DevPark Interface Overview">
+                        </div>
+                        <!-- Slide 2: Idea Posting & Discovery -->
+                        <div class="slide">
+                            <img src="https://placehold.co/800x450/ffe6cc/ffc107?text=Share+Your+Ideas+%26+Find+Projects" alt="DevPark Idea Posting">
+                        </div>
+                        <!-- Slide 3: Collaboration & Messaging -->
+                        <div class="slide">
+                            <img src="https://placehold.co/800x450/d1e7dd/28a745?text=Connect+%26+Collaborate+Seamlessly" alt="DevPark Collaboration">
+                        </div>
+                        <!-- Slide 4: Polls & Community Feedback -->
+                        <div class="slide">
+                            <img src="https://placehold.co/800x450/e0e7ff/6366f1?text=Gather+Community+Feedback+with+Polls" alt="DevPark Polls">
+                        </div>
+                        <!-- Slide 5: Hackathons & Events -->
+                        <div class="slide">
+                            <img src="https://placehold.co/800x450/f0f4f8/94a3b8?text=Participate+in+Hackathons+%26+Events" alt="DevPark Hackathons">
+                        </div>
+                    </div>
+
+                    <!-- Slider Navigation Buttons -->
+                    <button class="slider-button prev-button" onclick="changeSlide(-1)">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button class="slider-button next-button" onclick="changeSlide(1)">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+
+                    <!-- Pagination Dots -->
+                    <div class="pagination-dots" id="pagination-dots">
+                        <!-- Dots will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section: Highlights the core functionalities of DevPark -->
+        <section id="features" class="py-16 bg-white px-4">
+            <div class="max-w-6xl mx-auto text-center">
+                <h2 class="section-title">Fuel Your Innovation with DevPark's Features</h2>
+                <p class="section-paragraph max-w-3xl mx-auto">From brainstorming new concepts to launching hackathons, DevPark provides the tools you need to succeed.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+                    <!-- Feature Card 1: Idea Sharing & Collaboration (UPDATED) -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-blue-600 mb-4 text-4xl">
+                            <!-- Icon for Idea Sharing -->
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Idea Marketplace & Diverse Collaborations</h3>
+                        <p class="text-gray-600">Post your groundbreaking ideas, connect with like-minded individuals for coding collaborations, design partnerships, or even secure <span class="font-semibold text-blue-700">money partnerships and investments</span>. Reach out directly to initiate collaborations.</p>
+                    </div>
+
+                    <!-- Feature Card 2: Twitter-like Write-ups -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-green-600 mb-4 text-4xl">
+                            <!-- Icon for Writing/Blogging -->
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Engaging Write-ups & Updates</h3>
+                        <p class="text-gray-600">Share quick thoughts, project updates, and insights in a dynamic feed, similar to your favorite social platforms.</p>
+                    </div>
+
+                    <!-- Feature Card 3: Polls & Community Feedback -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-red-600 mb-4 text-4xl">
+                            <!-- Icon for Polls/Voting -->
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Interactive Polls & Surveys</h3>
+                        <p class="text-gray-600">Gather valuable community feedback on your ideas, designs, or development challenges with easy-to-create polls.</p>
+                    </div>
+
+                    <!-- Feature Card 4: Hackathon-like Events -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-purple-600 mb-4 text-4xl">
+                            <!-- Icon for Events/Competition -->
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M17 11h.01M9 15h.01M15 15h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Dynamic Hackathons & Challenges</h3>
+                        <p class="text-gray-600">Organize or participate in virtual hackathon-like events to build, learn, and showcase your skills within a competitive environment.</p>
+                    </div>
+
+                    <!-- Feature Card 5: Reporting & Bug Reporting -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-yellow-600 mb-4 text-4xl">
+                            <!-- Icon for Security/Reporting -->
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Robust Reporting & Feedback</h3>
+                        <p class="text-gray-600">Maintain a healthy community with easy reporting tools for content or users, and a dedicated system for bug reports.</p>
+                    </div>
+
+                    <!-- Feature Card 6: Developer-Friendly Environment -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-orange-600 mb-4 text-4xl">
+                            <!-- Icon for Code/Development -->
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Intuitive & Powerful Interface</h3>
+                        <p class="text-gray-600">A clean, intuitive environment built for developers, investors, and enthusiasts to easily navigate and contribute.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog/News Section: For articles, announcements, and community insights -->
+        <section id="blog-news" class="py-16 bg-gray-50 px-4">
+            <div class="max-w-6xl mx-auto text-center">
+                <h2 class="section-title">Latest from Our Blog & News</h2>
+                <p class="section-paragraph max-w-3xl mx-auto">Stay up-to-date with DevPark's latest announcements, tutorials, and insights from the development world.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+                    <!-- Blog Post 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <img src="https://placehold.co/400x250/d1e7dd/28a745?text=Blog+Post+1" alt="Blog Post Image 1" class="w-full h-48 object-cover">
+                        <div class="p-6 text-left">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Revolutionizing Workflow with DevPark 2.0</h3>
+                            <p class="text-gray-600 text-sm mb-4">Discover the groundbreaking features and performance enhancements in our latest release.</p>
+                            <a href="#" class="text-blue-600 hover:underline font-medium text-sm">Read More &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Blog Post 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <img src="https://placehold.co/400x250/cce5ff/007bff?text=Blog+Post+2" alt="Blog Post Image 2" class="w-full h-48 object-cover">
+                        <div class="p-6 text-left">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Top 5 Tips for Collaborative Idea Generation</h3>
+                            <p class="text-gray-600 text-sm mb-4">Maximize team productivity and spark innovation using DevPark's collaboration tools.</p>
+                            <a href="#" class="text-blue-600 hover:underline font-medium text-sm">Read More &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Blog Post 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <img src="https://placehold.co/400x250/ffe6cc/ffc107?text=Blog+Post+3" alt="Blog Post Image 3" class="w-full h-48 object-cover">
+                        <div class="p-6 text-left">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Demystifying Investment Pitches for Developers</h3>
+                            <p class="text-gray-600 text-sm mb-4">Insights for developers looking to attract investors to their groundbreaking ideas.</p>
+                            <a href="#" class="text-blue-600 hover:underline font-medium text-sm">Read More &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <a href="#" class="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-md transition duration-300">
+                        View All Posts
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Help Center Section: Provides resources and support documentation -->
+        <section id="help-center" class="py-16 bg-white px-4">
+            <div class="max-w-6xl mx-auto text-center">
+                <h2 class="section-title">Need Help? Visit Our Help Center</h2>
+                <p class="section-paragraph max-w-3xl mx-auto">Find answers to common questions, detailed guides, and troubleshooting tips to get the most out of DevPark.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 text-left">
+                    <!-- Help Category 1: Getting Started -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Getting Started</h3>
+                        <ul class="list-none p-0 space-y-2 text-gray-600">
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Signing Up for DevPark</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Posting Your First Idea</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Navigating the Idea Feed</a></li>
+                        </ul>
+                    </div>
+                    <!-- Help Category 2: Collaboration & Projects -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Collaboration & Projects</h3>
+                        <ul class="list-none p-0 space-y-2 text-gray-600">
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Inviting Collaborators to Your Idea</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Joining a Project</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Managing Project Teams</a></li>
+                        </ul>
+                    </div>
+                    <!-- Help Category 3: Community & Engagement -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Community & Engagement</h3>
+                        <ul class="list-none p-0 space-y-2 text-gray-600">
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Writing and Sharing Updates</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Creating and Participating in Polls</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Finding and Joining Hackathons</a></li>
+                        </ul>
+                    </div>
+                    <!-- Help Category 4: Account & Safety -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Account & Safety</h3>
+                        <ul class="list-none p-0 space-y-2 text-gray-600">
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Reporting Issues or Users</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Submitting a Bug Report</a></li>
+                            <li><a href="#" class="hover:text-blue-600 hover:underline">Managing Your Profile Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <a href="#" class="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-md transition duration-300">
+                        Browse All Articles
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section: Provides a form for direct inquiries -->
+        <section id="contact" class="py-16 bg-gray-50 px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-paragraph">Have questions, feedback, or need direct assistance? We're here to help.</p>
+
+                <div class="mt-8 bg-white p-8 rounded-lg shadow-lg text-left">
+                    <form action="#" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="your@example.com">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                            <input type="text" id="subject" name="subject" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Partnership Inquiry, Support Question">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                            <textarea id="message" name="message" rows="5" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Tell us how we can help..."></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow-md transition duration-300">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                    <p class="text-center text-sm text-gray-500 mt-6">
+                        Or email us directly at <a href="mailto:support@devpark.com" class="text-blue-600 hover:underline">support@devpark.com</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Policy Section: Essential legal information -->
+        <section id="privacy-policy" class="py-16 bg-white px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="section-title text-center">Privacy Policy</h2>
+                <p class="section-paragraph text-justify">
+                    At DevPark, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website devpark.com and use our services.
+                </p>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">Information We Collect</h3>
+                <p class="text-gray-600 mb-4">
+                    We collect personal information that you voluntarily provide to us when you register on the site, express an interest in obtaining information about us or our products and services, when you participate in activities on the website (such as posting messages, creating polls, attending hackathons), or otherwise when you contact us.
+                </p>
+                <p class="text-gray-600 mb-4">
+                    The personal information that we collect depends on the context of your interactions with us and the Website, the choices you make, and the products and features you use. The personal information we collect may include the following:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+                    <li>Name and contact data (email address, optional profile links)</li>
+                    <li>Credentials (passwords, password hints, and similar security information used for authentication and account access)</li>
+                    <li>Content you provide (ideas, write-ups, poll responses, project details)</li>
+                    <li>Usage data (information about how you interact with ideas, projects, and community features)</li>
+                    <li>Technical data (IP address, browser type, operating system)</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">How We Use Your Information</h3>
+                <p class="text-gray-600 mb-4">
+                    We use personal information collected via our Website for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+                    <li>To facilitate account creation and logon process.</li>
+                    <li>To enable community features like idea sharing, write-ups, polls, and hackathons.</li>
+                    <li>To facilitate direct collaboration between users on posted ideas, including potential investment discussions.</li>
+                    <li>To send you transactional and optional marketing/promotional communications.</li>
+                    <li>To send administrative information to you.</li>
+                    <li>To protect our Services and ensure platform integrity (e.g., through reporting systems).</li>
+                    <li>To respond to user inquiries/offer support to users.</li>
+                    <li>To request feedback and improve our services.</li>
+                    <li>To enable us to manage user accounts.</li>
+                </ul>
+
+                <p class="text-gray-600 mb-4">
+                    For more detailed information on how we use your data, data sharing, your rights, and more, please review the full policy available <a href="#" class="text-blue-600 hover:underline font-medium">here</a>.
+                </p>
+            </div>
+        </section>
+
+        <!-- Terms of Service Section: Essential legal information -->
+        <section id="terms" class="py-16 bg-gray-50 px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="section-title text-center">Terms of Service</h2>
+                <p class="section-paragraph text-justify">
+                    Welcome to DevPark. These Terms of Service ("Terms") govern your use of the DevPark website and all related services, features, content, applications, and products provided by DevPark. By accessing or using DevPark, you agree to be bound by these Terms.
+                </p>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">1. Acceptance of Terms</h3>
+                <p class="text-gray-600 mb-4">
+                    By creating an account, accessing, or using DevPark services, you affirm that you are at least 18 years old or the age of legal majority in your jurisdiction, and capable of forming a binding contract, and that you accept and agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use our services.
+                </p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">2. Account Registration and Content</h3>
+                <p class="text-gray-600 mb-4">
+                    You may be required to register for an account to access certain features of DevPark. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete. You are responsible for safeguarding your password and for any activities or actions under your password.
+                </p>
+                <p class="text-gray-600 mb-4">
+                    You retain ownership of any intellectual property rights that you hold in the content you submit to DevPark (e.g., ideas, write-ups, code snippets). By submitting content, you grant DevPark a worldwide, non-exclusive, royalty-free license to use, reproduce, distribute, and display such content solely for the purpose of operating and promoting the DevPark services.
+                </p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">3. User Conduct</h3>
+                <p class="text-gray-600 mb-4">
+                    You agree not to engage in any of the following prohibited activities:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+                    <li>Using the service for any illegal purpose or in violation of any local, state, national, or international law.</li>
+                    <li>Engaging in any activity that is harmful, fraudulent, deceptive, threatening, harassing, defamatory, obscene, or otherwise objectionable.</li>
+                    <li>Spamming the idea feed, polls, or write-up sections with irrelevant or repetitive content.</li>
+                    <li>Attempting to unfairly influence poll results or hackathon outcomes.</li>
+                    <li>Interfering with or disrupting the integrity or performance of the Service or data contained therein.</li>
+                    <li>Attempting to gain unauthorized access to the Service or its related systems or networks.</li>
+                    <li>Transmitting any viruses, worms, defects, Trojan horses, or any items of a destructive nature.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">4. Collaboration and Investor Engagement</h3>
+                <p class="text-gray-600 mb-4">
+                    DevPark facilitates connections between users for collaboration and potential investment. While we strive to provide a secure and supportive environment, DevPark is not responsible for the outcomes of any collaborations, agreements, or investments made between users. Users are solely responsible for due diligence and for establishing their own terms of collaboration or partnership outside of the DevPark platform.
+                </p>
+
+                <p class="text-gray-600 mb-4">
+                    For a complete understanding of your rights and obligations, please read the full Terms of Service available <a href="#" class="text-blue-600 hover:underline font-medium">here</a>.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-10 px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <!-- Footer Column 1: Logo & About -->
+            <div class="space-y-4">
+                <a href="#home" class="flex items-center justify-center md:justify-start space-x-2">
+                    <img src="https://placehold.co/30x30/424242/ffffff?text=DP" alt="DevPark Logo" class="rounded-full">
+                    <span class="text-xl font-bold text-white">DevPark</span>
+                </a>
+                <p class="text-sm">Empowering developers, investors, and innovators to build for everyone.</p>
+                <div class="flex justify-center md:justify-start space-x-4 mt-4">
+                    <!-- Social media icons (SVGs for scalability and clean look) -->
+                    <a href="[Facebook Link]" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.247 0-1.666.776-1.666 1.515V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z"/></svg>
+                    </a>
+                    <!-- Twitter link with a placeholder image, as requested -->
+                    <a href="[Twitter Link]" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <img src="https://placehold.co/24x24/1DA1F2/ffffff?text=T" alt="Twitter" class="w-6 h-6" onerror="this.onerror=null;this.src='https://placehold.co/24x24/cccccc/333333?text=T';">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer Column 2: Quick Links -->
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#features" class="hover:text-white transition-colors duration-200">Features</a></li>
+                    <li><a href="#blog-news" class="hover:text-white transition-colors duration-200">Blog & News</a></li>
+                    <li><a href="#help-center" class="hover:text-white transition-colors duration-200">Help Center</a></li>
+                    <li><a href="#contact" class="hover:text-white transition-colors duration-200">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Footer Column 3: Legal & More -->
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Legal & Support</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#privacy-policy" class="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
+                    <li><a href="#terms" class="hover:text-white transition-colors duration-200">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors duration-200">Report an Issue</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors duration-200">Community Guidelines</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-500">
+            &copy; 2025 DevPark. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu and Image Slider -->
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a nav link is clicked (for smooth scrolling)
+        document.querySelectorAll('#mobile-menu a').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // Image Slider Functionality
+        const slides = document.getElementById('platform-slider');
+        const totalSlides = slides.children.length;
+        let currentSlide = 0;
+        let autoSlideInterval; // Variable to hold the interval ID
+
+        // Function to update pagination dots
+        function updateDots() {
+            const paginationDotsContainer = document.getElementById('pagination-dots');
+            paginationDotsContainer.innerHTML = ''; // Clear existing dots
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === currentSlide) {
+                    dot.classList.add('active');
+                }
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                    resetAutoSlide(); // Reset timer on manual navigation
+                });
+                paginationDotsContainer.appendChild(dot);
+            }
+        }
+
+        // Function to go to a specific slide
+        function goToSlide(slideIndex) {
+            currentSlide = (slideIndex + totalSlides) % totalSlides; // Ensure index wraps around
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateDots(); // Update dots after slide changes
+        }
+
+        // Function to change slide (previous/next)
+        function changeSlide(direction) {
+            goToSlide(currentSlide + direction);
+            resetAutoSlide(); // Reset timer on manual navigation
+        }
+
+        // Function to advance to the next slide automatically
+        function nextSlideAuto() {
+            goToSlide(currentSlide + 1);
+        }
+
+        // Function to reset the auto-slide timer
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(nextSlideAuto, 5000); // 5 seconds
+        }
+
+        // Initialize slider and auto-play on window load
+        window.onload = function() {
+            goToSlide(0); // Start at the first slide
+            resetAutoSlide(); // Start the auto-slide
+        };
+    </script>
+</body>
+</html>
