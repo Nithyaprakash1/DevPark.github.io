@@ -1,376 +1,803 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>DevPark - Privacy Policy</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <!-- Tailwind CSS CDN for modern, utility-first styling -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts - Inter for a clean, professional, and accessible typeface -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+
         /* Apply Inter font globally for consistent typography */
+
         body {
+
             font-family: 'Inter', sans-serif;
+
             -webkit-font-smoothing: antialiased; /* Smoother font rendering on macOS/iOS */
+
             -moz-osx-smoothing: grayscale; /* Smoother font rendering on Firefox */
+
         }
+
         /* Custom underline effect for desktop navigation links */
+
         .nav-link.active,
+
         .nav-link:hover {
+
             text-decoration: underline;
+
             text-decoration-color: #1a73e8; /* Google Blue for emphasis */
+
             text-underline-offset: 4px; /* Space between text and underline */
+
         }
+
         /* Ensure main content starts below the fixed header */
+
         main {
+
             padding-top: 80px; /* Adjust based on header height */
+
         }
+
+
 
         /* Reusable styles for section titles and paragraphs to maintain consistency */
+
         .section-title {
+
             @apply text-3xl md:text-4xl font-bold text-gray-800 mb-6;
+
         }
+
         .section-paragraph {
+
             @apply text-base md:text-lg text-gray-600 mb-4;
+
         }
+
+
 
         /* Full-screen heading section specific styles */
+
         .fullscreen-heading {
+
             min-height: calc(100vh - 80px); /* Full viewport height minus header */
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             background-color: #f0f7ff; /* Light blue background for visual appeal */
+
             text-align: center;
+
             padding: 2rem;
+
         }
+
+
 
         /* Dynamic Header Styles */
+
         .main-header {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             background-color: #ffffff;
+
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+
             z-index: 50;
+
             transform: translateY(0);
+
             transition: transform 0.3s ease-out; /* Smooth slide transition */
+
         }
+
+
 
         .main-header.header-hidden {
+
             transform: translateY(-100%); /* Move header off-screen upwards */
+
         }
+
+
 
         /* Mobile Drawer Specific Styles */
+
         .mobile-drawer {
+
             position: fixed;
+
             top: 0;
+
             right: 0; /* Starts off-screen to the right */
+
             bottom: 0;
+
             width: 80%; /* Adjust as needed */
+
             max-width: 300px; /* Max width for larger mobile devices */
+
             background-color: #ffffff;
+
             box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+
             transform: translateX(100%); /* Initially hidden */
+
             transition: transform 0.3s ease-in-out; /* Smooth slide transition */
+
             z-index: 100; /* Higher than header to be on top */
+
             padding-top: 80px; /* Account for fixed header height */
+
             display: flex; /* Use flexbox for vertical alignment of items */
+
             flex-direction: column;
+
             overflow-y: auto; /* Enable scrolling for long menus */
+
         }
+
+
 
         .mobile-drawer.open {
+
             transform: translateX(0); /* Slides into view */
+
         }
+
+
 
         .mobile-overlay {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             right: 0;
+
             bottom: 0;
+
             background-color: rgba(0, 0, 0, 0.5); /* Dimming effect */
+
             z-index: 90; /* Between header and drawer */
+
             display: none; /* Hidden by default */
+
         }
+
+
 
         .mobile-overlay.open {
+
             display: block; /* Visible when drawer is open */
+
         }
+
+
 
         .mobile-menu-item {
+
             display: block;
+
             padding: 12px 24px;
+
             text-align: left;
+
             color: #3c4043;
+
             font-weight: 500;
+
             transition: background-color 0.2s ease, border-radius 0.2s ease; /* Add border-radius to transition */
+
         }
+
+
 
         .mobile-menu-item:hover {
+
             background-color: #f1f3f4; /* Light grey hover */
+
         }
+
+
 
         .mobile-menu-item.active {
+
             background-color: #e8f0fe; /* Light blue background for active item */
+
             color: #1a73e8; /* Google blue text for active item */
+
             font-weight: 600; /* Slightly bolder for active */
+
             /* Curved edges for active item, similar to Google's mobile menu */
+
             border-top-left-radius: 9999px; /* Tailwind's rounded-full */
+
             border-bottom-left-radius: 9999px; /* Tailwind's rounded-full */
+
             margin-right: 16px; /* Space from the right edge, matching Google's visual */
+
             padding-left: 24px; /* Ensure consistent padding with curved edge */
+
             position: relative; /* For ensuring z-index if needed */
+
             z-index: 1; /* Keep active item on top of potential overlaps */
+
         }
+
+
 
         /* Hamburger icon animation */
+
         .hamburger-icon span {
+
             display: block;
+
             width: 24px;
+
             height: 3px;
+
             background-color: #5f6368;
+
             margin: 5px 0;
+
             transition: all 0.3s ease-in-out;
+
         }
+
+
 
         .hamburger-icon.open span:nth-child(1) {
+
             transform: translateY(8px) rotate(45deg);
+
         }
+
+
 
         .hamburger-icon.open span:nth-child(2) {
+
             opacity: 0;
+
         }
+
+
 
         .hamburger-icon.open span:nth-child(3) {
+
             transform: translateY(-8px) rotate(-45deg);
+
         }
+
     </style>
+
 </head>
+
 <body class="text-gray-900 bg-gray-50">
-        <header class="main-header" id="main-header">
+
+    <!-- Sticky Header: Ensures navigation is always accessible at the top -->
+
+    <header class="main-header" id="main-header">
+
         <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                        <a href="index.html" class="flex items-center space-x-2">
+
+            <!-- Logo/Site Title: Links back to the home section -->
+
+            <a href="index.html" class="flex items-center space-x-2">
+
     <img src="assets/translogo.png" alt="DevPark Logo" width="36" height="36">
+
     <span class="text-2xl font-bold text-gray-800">DevPark</span>
+
 </a>
-                        <div class="hidden md:flex space-x-8">
+
+            <!-- Desktop Navigation: Visible on medium screens and larger -->
+
+            <div class="hidden md:flex space-x-8">
+
                 <a href="index.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Home</a>
+
                 <a href="features.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Features</a>
+
                 <a href="blog.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Blog/News</a>
-                <a href="careers.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Careers</a>                 <a href="contact.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+
+                <a href="careers.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Careers</a> <!-- Changed from Help Center -->
+
+                <a href="contact.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+
                 <a href="privacy-policy.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Privacy</a>
+
                 <a href="terms.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium">Terms</a>
+
             </div>
 
-                        <div class="md:hidden">
+
+
+            <!-- Mobile Navigation (Hamburger Icon): Visible only on small screens -->
+
+            <div class="md:hidden">
+
                 <button id="mobile-menu-button" class="text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-2">
+
                     <div class="hamburger-icon" id="hamburger-icon">
+
                         <span></span>
+
                         <span></span>
+
                         <span></span>
+
                     </div>
+
                 </button>
+
             </div>
+
         </nav>
+
     </header>
 
-        <div id="mobile-drawer" class="mobile-drawer">
-        <nav class="p-4 pt-20">             <a href="index.html" class="mobile-menu-item">Home</a>
+
+
+    <!-- Mobile Drawer -->
+
+    <div id="mobile-drawer" class="mobile-drawer">
+
+        <nav class="p-4 pt-20"> <!-- Added padding-top to account for fixed header -->
+
+            <a href="index.html" class="mobile-menu-item">Home</a>
+
             <a href="features.html" class="mobile-menu-item">Features</a>
+
             <a href="blog.html" class="mobile-menu-item">Blog/News</a>
-            <a href="careers.html" class="mobile-menu-item">Careers</a>             <a href="contact.html" class="mobile-menu-item">Contact</a>
+
+            <a href="careers.html" class="mobile-menu-item">Careers</a> <!-- Changed from Help Center -->
+
+            <a href="contact.html" class="mobile-menu-item">Contact</a>
+
             <a href="privacy-policy.html" class="mobile-menu-item">Privacy Policy</a>
+
             <a href="terms.html" class="mobile-menu-item">Terms of Service</a>
+
         </nav>
+
     </div>
 
-        <div id="mobile-overlay" class="mobile-overlay"></div>
 
-    <main class="pt-20">                 <section class="fullscreen-heading bg-gradient-to-br from-blue-50 to-indigo-50">
+
+    <!-- Mobile Overlay -->
+
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+
+
+    <main class="pt-20"> <!-- Main content area, offset by header height -->
+
+        <!-- Full-screen heading for Privacy Policy page -->
+
+        <section class="fullscreen-heading bg-gradient-to-br from-blue-50 to-indigo-50">
+
             <div class="max-w-4xl mx-auto text-center">
+
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-800 leading-tight">
+
                     DevPark <span class="text-blue-600">Privacy Policy</span>
+
                 </h1>
+
                 <p class="mt-4 text-lg md:text-xl text-gray-600">Your privacy is our priority.</p>
+
             </div>
+
         </section>
 
-                <section class="py-16 bg-white px-4">
+
+
+        <!-- Privacy Policy Section: Essential legal information -->
+
+        <section class="py-16 bg-white px-4">
+
             <div class="max-w-4xl mx-auto">
+
                 <h2 class="section-title text-center">Your Data, Your Control</h2>
+
                 <p class="section-paragraph text-justify">
+
                     At DevPark, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website devpark.com and use our services.
+
                 </p>
+
                 <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">Information We Collect</h3>
+
                 <p class="text-gray-600 mb-4">
+
                     We collect personal information that you voluntarily provide to us when you register on the site, express an interest in obtaining information about us or our products and services, when you participate in activities on the website (such as posting messages, creating polls, attending hackathons), or otherwise when you contact us.
+
                 </p>
+
                 <p class="text-gray-600 mb-4">
+
                     The personal information that we collect depends on the context of your interactions with us and the Website, the choices you make, and the products and features you use. The personal information we collect may include the following:
+
                 </p>
+
                 <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+
                     <li>Name and data like (email address, optional profile links)</li>
+
                     <li>Content you provide (ideas, write-ups, poll responses, project details)</li>
+
                     <li>Usage data (information about how you interact with ideas, projects, and community features)</li>
+
                 </ul>
+
+
 
                 <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-8">How We Use Your Information</h3>
-                <p class="text-gray-600 mb-4">
-                    We use personal information collected via our Website for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.
-                </p>
-                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
-                    <li>To facilitate account creation and logon process.</li>
-                    <li>To enable community features like idea sharing, write-ups, polls, and hackathons.</li>
-                    <li>To facilitate direct collaboration between users on posted ideas, including potential investment discussions.</li>
-                    <li>To send you transactional and optional marketing/promotional communications.</li>
-                    <li>To send administrative information to you.</li>
-                    <li>To protect our Services and ensure platform integrity (e.g., through reporting systems).</li>
-                    <li>To respond to user inquiries/offer support to users.</li>
-                    <li>To enable us to manage user accounts.</li>
-                </ul>
 
                 <p class="text-gray-600 mb-4">
-                    For more detailed information on how we use your data, data sharing, your rights, and more, please review the full policy available <a href="#" class="text-blue-600 hover:underline font-medium">here</a>.
+
+                    We use personal information collected via our Website for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.
+
                 </p>
+
+                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+
+                    <li>To facilitate account creation and logon process.</li>
+
+                    <li>To enable community features like idea sharing, write-ups, polls, and hackathons.</li>
+
+                    <li>To facilitate direct collaboration between users on posted ideas, including potential investment discussions.</li>
+
+                    <li>To send you transactional and optional marketing/promotional communications.</li>
+
+                    <li>To send administrative information to you.</li>
+
+                    <li>To protect our Services and ensure platform integrity (e.g., through reporting systems).</li>
+
+                    <li>To respond to user inquiries/offer support to users.</li>
+
+                    <li>To request feedback and improve our services.</li>
+
+                    <li>To enable us to manage user accounts.</li>
+
+                </ul>
+
+
+
+                <p class="text-gray-600 mb-4">
+
+                    For more detailed information on how we use your data, data sharing, your rights, and more, please review the full policy available <a href="#" class="text-blue-600 hover:underline font-medium">here</a>.
+
+                </p>
+
             </div>
+
         </section>
+
     </main>
 
-        <footer class="bg-gray-800 text-gray-300 py-10 px-4">
+
+
+    <!-- Footer -->
+
+    <footer class="bg-gray-800 text-gray-300 py-10 px-4">
+
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-                        <div class="space-y-4">
+
+            <!-- Footer Column 1: Logo & About -->
+
+            <div class="space-y-4">
+
                 <a href="index.html" class="flex items-center justify-center md:justify-start space-x-2">
+
                     <img src="assets/translogo.png" alt="DevPark Logo" class="rounded-full" style="
+
             width: 2.55rem;
+
             height: 2.55rem;"><span class="text-xl font-bold text-white">DevPark</span>
+
                 </a>
+
                 <p class="text-sm">Empowering developers, investors, and innovators to build for everyone.</p>
+
                 <div class="flex justify-center md:justify-start space-x-4 mt-4">
-                                    </div>
+
+                    <!-- Social media icons -->
+
+<!--                    <a href="[Facebook Link]" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors duration-200">-->
+
+<!--                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.247 0-1.666.776-1.666 1.515V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z"/></svg>-->
+
+<!--                    </a>-->
+
+<!--                    <a href="[Twitter Link]" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors duration-200">-->
+
+<!--                        <img src="https://placehold.co/24x24/1DA1F2/ffffff?text=T" alt="Twitter" class="w-6 h-6" onerror="this.onerror=null;this.src='https://placehold.co/24x24/cccccc/333333?text=T';">-->
+
+<!--                    </a>-->
+
+                </div>
+
             </div>
 
-                        <div>
+
+
+            <!-- Footer Column 2: Quick Links -->
+
+            <div>
+
                 <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
+
                 <ul class="space-y-2 text-sm">
+
                     <li><a href="features.html" class="hover:text-white transition-colors duration-200">Features</a></li>
+
                     <li><a href="blog.html" class="hover:text-white transition-colors duration-200">Blog & News</a></li>
+
                     <li><a href="careers.html" class="hover:text-white transition-colors duration-200">Careers</a></li>
+
                     <li><a href="contact.html" class="hover:text-white transition-colors duration-200">Contact Us</a></li>
+
                 </ul>
+
             </div>
 
-                        <div>
+
+
+            <!-- Footer Column 3: Legal & More -->
+
+            <div>
+
                 <h3 class="text-lg font-semibold text-white mb-4">Legal & Support</h3>
+
                 <ul class="space-y-2 text-sm">
+
                     <li><a href="privacy-policy.html" class="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
+
                     <li><a href="terms.html" class="hover:text-white transition-colors duration-200">Terms of Service</a></li>
-                    <li><a href="mailto:devpark.contact@gmail.com?subject=Request to Delete Account and Data" class="hover:text-white transition-colors duration-200">Request Data Deletion</a></li>
+
                     <li><a href="contact.html" class="hover:text-white transition-colors duration-200">Report an Issue</a></li>
+
                     <li><a href="contact.html" class="hover:text-white transition-colors duration-200">Community Guidelines</a></li>
+
                 </ul>
+
             </div>
+
         </div>
+
         <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-500">
+
             &copy; 2025 DevPark. All rights reserved.
+
         </div>
+
     </footer>
 
-        <script>
+
+
+    <!-- JavaScript for Mobile Menu and Dynamic Header -->
+
+    <script>
+
         const mainHeader = document.getElementById('main-header');
+
         const mobileMenuButton = document.getElementById('mobile-menu-button');
+
         const mobileDrawer = document.getElementById('mobile-drawer');
+
         const mobileOverlay = document.getElementById('mobile-overlay');
+
         const hamburgerIcon = document.getElementById('hamburger-icon');
 
+
+
         let lastScrollTop = 0;
+
         let headerVisible = true;
+
         const scrollThreshold = 100; // Pixels to scroll before hiding/showing header
 
+
+
         // Function to handle header reveal/hide on scroll
+
         function handleHeaderScroll() {
+
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
+
+
             if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+
                 // Scrolling down past threshold
+
                 if (headerVisible) {
+
                     mainHeader.classList.add('header-hidden');
+
                     headerVisible = false;
+
                 }
+
             } else if (scrollTop < lastScrollTop) {
+
                 // Scrolling up
+
                 if (!headerVisible) {
+
                     mainHeader.classList.remove('header-hidden');
+
                     headerVisible = true;
+
                 }
+
             }
+
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+
         }
+
+
 
         // Add scroll event listener for dynamic header
+
         window.addEventListener('scroll', handleHeaderScroll);
 
+
+
         // Function to set the active navigation link based on the current page
+
         function setActiveNavLink() {
+
             const currentPath = window.location.pathname.split('/').pop(); // Get filename
+
             const navLinks = document.querySelectorAll('.nav-link');
+
             const mobileMenuItems = document.querySelectorAll('.mobile-menu-item');
 
+
+
             navLinks.forEach(link => {
+
                 if (link.getAttribute('href') === currentPath) {
+
                     link.classList.add('active');
+
                 } else {
+
                     link.classList.remove('active');
+
                 }
+
             });
+
+
 
             mobileMenuItems.forEach(link => {
+
                 if (link.getAttribute('href') === currentPath) {
+
                     link.classList.add('active');
+
                 } else {
+
                     link.classList.remove('active');
+
                 }
+
             });
+
         }
 
+
+
         // Mobile Menu Toggle
+
         mobileMenuButton.addEventListener('click', function() {
+
             mobileDrawer.classList.toggle('open');
+
             mobileOverlay.classList.toggle('open');
+
             hamburgerIcon.classList.toggle('open');
+
             // Disable body scroll when drawer is open
+
             if (mobileDrawer.classList.contains('open')) {
+
                 document.body.style.overflow = 'hidden';
+
             } else {
+
                 document.body.style.overflow = '';
+
             }
+
         });
+
+
 
         // Close mobile menu when overlay is clicked
+
         mobileOverlay.addEventListener('click', function() {
+
             mobileDrawer.classList.remove('open');
+
             mobileOverlay.classList.remove('open');
+
             hamburgerIcon.classList.remove('open');
+
             document.body.style.overflow = ''; // Re-enable body scroll
+
         });
+
+
 
         // Close mobile menu when a nav link in the drawer is clicked
+
         document.querySelectorAll('.mobile-menu-item').forEach(item => {
+
             item.addEventListener('click', () => {
+
                 mobileDrawer.classList.remove('open');
+
                 mobileOverlay.classList.remove('open');
+
                 hamburgerIcon.classList.remove('open');
+
                 document.body.style.overflow = ''; // Re-enable body scroll
+
             });
+
         });
 
+
+
         // Set active nav link on window load
+
         window.onload = function() {
+
             setActiveNavLink();
+
         };
+
     </script>
+
 </body>
+
 </html>
